@@ -35,7 +35,7 @@ export class PersonRepository extends Repository<PersonEntity> {
 
     const total = await query.clone().getCount();
 
-    const data = await query.skip(offset).take(limit).orderBy(`t.startDate`, "ASC").getMany();
+    const data = await query.skip(offset).take(limit).getMany();
 
     return {
       total,
