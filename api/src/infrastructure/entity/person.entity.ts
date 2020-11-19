@@ -1,7 +1,7 @@
 import { BeforeInsert, BeforeUpdate, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 import { Person } from "../../domain/person/person";
 
-@Entity("booking_insurances")
+@Entity("persons")
 export class PersonEntity {
   @PrimaryGeneratedColumn("uuid")
   public id: string;
