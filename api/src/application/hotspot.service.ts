@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { Hotspot } from "./hotspot";
+import { Hotspot } from "../infrastructure/entity/hotspot";
 
 @Injectable()
 export class HotspotService {
@@ -24,7 +24,7 @@ export class HotspotService {
   }
 
   async save(hotspot: Hotspot): Promise<Hotspot> {
-    await this.repository.save(hotspot);
-    return hotspot;
+    let result = await this.repository.save(hotspot);
+    return result;
   }
 }

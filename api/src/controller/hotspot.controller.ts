@@ -1,8 +1,8 @@
 import { Body, Controller, Get, HttpException, HttpStatus, Post } from "@nestjs/common";
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
-import { CreateHotspotRequestDto } from "./create.hotspot.request.dto";
-import { Hotspot } from "./hotspot";
-import { HotspotService } from "./hotspot.service";
+import { CreateHotspotRequestDto } from "../dto/request/create.hotspot.request.dto";
+import { Hotspot } from "../infrastructure/entity/hotspot";
+import { HotspotService } from "../application/hotspot.service";
 
 @ApiTags("Hotspots")
 @Controller("hotspots")
@@ -11,17 +11,18 @@ export class HotspotController {
 
   @Get("/")
   public async getAll(): Promise<Hotspot[]> {
-    return [];
+    return this.hotspotService.findAll();
   }
   
   @ApiResponse({
     type: CreateHotspotRequestDto,
   })
   @Post("/")
-  public async createHotspot(@Body() body: CreateHotspotRequestDto): Promise<CreateHotspotRequestDto> {
+  public async createHotspot(@Body() body: CreateHotspotRequestDto): Promise<Hotspot> {
     try {
-      await this.hotspotService.save({...body, id: null});
-      return body;
+      let newHotspot = Hotspot.fromRequestDto(body);
+      let result = await this.hotspotService.save(newHotspot);
+      return result;
     } catch (e) {
       throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
     }

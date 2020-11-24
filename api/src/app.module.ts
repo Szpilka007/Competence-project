@@ -7,9 +7,9 @@ import { PersonService } from "./application/person.service";
 import { PersonGeneratorService } from "./application/person-generator.service";
 import dotenv from "dotenv";
 import { PersonController } from "./controller/person.controller";
-import { HotspotController } from "./hotspot/hotspot.controller";
-import { Hotspot } from "./hotspot/hotspot";
-import { HotspotService } from "./hotspot/hotspot.service";
+import { HotspotController } from "./controller/hotspot.controller";
+import { Hotspot } from "./infrastructure/entity/hotspot";
+import { HotspotService } from "./application/hotspot.service";
 
 dotenv.config();
 
