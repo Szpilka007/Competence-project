@@ -4,6 +4,7 @@ import { PersonEntity } from "./infrastructure/entity/person.entity";
 import { PersonRepository } from "./infrastructure/repository/person.repository";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { PersonService } from "./application/person.service";
+import { PersonGeneratorService } from "./application/person-generator.service";
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { PersonService } from "./application/person.service";
     }),
     TypeOrmModule.forFeature([PersonRepository]),
   ],
-  providers: [PersonService],
+  providers: [PersonService, PersonGeneratorService],
   controllers: [AppController],
 })
 export class AppModule {}
