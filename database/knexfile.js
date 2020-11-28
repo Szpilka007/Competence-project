@@ -3,7 +3,7 @@ const { parse } = require('pg-connection-string');
 module.exports = {
 	client: 'pg',
 	connection: {
-		...parse(process.env.DATABASE_URL || 'postgres://user:password@localhost:5433/db'),
+		...parse(process.env.DATABASE_URL || 'postgres://user:password@localhost:5432/db'),
 		...(process.env.DATABASE_URL ? {
 			ssl: {
 				rejectUnauthorized: false
