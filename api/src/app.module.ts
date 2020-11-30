@@ -10,6 +10,9 @@ import { PersonController } from "./controller/person.controller";
 import { HotspotController } from "./controller/hotspot.controller";
 import { Hotspot } from "./infrastructure/entity/hotspot";
 import { HotspotService } from "./application/hotspot.service";
+import { TraceEntity } from "./infrastructure/entity/trace.entity";
+import { TraceRepository } from "./infrastructure/repository/trace.repository";
+import { TraceService } from "./application/trace.service";
 
 dotenv.config();
 
@@ -18,14 +21,14 @@ dotenv.config();
     TypeOrmModule.forRoot({
       type: "postgres",
       url: process.env.POSTGRES_DATABASE_URL,
-      entities: [PersonEntity, Hotspot],
+      entities: [PersonEntity, Hotspot, TraceEntity],
       extra: {
         ...(process.env.NODE_ENV !== "local" ? { ssl: { rejectUnauthorized: false } } : {}),
       },
     }),
-    TypeOrmModule.forFeature([PersonRepository, Hotspot]),
+    TypeOrmModule.forFeature([PersonRepository, Hotspot, TraceRepository]),
   ],
-  providers: [PersonService, HotspotService, PersonGeneratorService],
+  providers: [PersonService, HotspotService, PersonGeneratorService, TraceService],
   controllers: [AppController, PersonController, HotspotController],
 })
 export class AppModule {}
