@@ -2,7 +2,7 @@ import { IsArray, IsInt, IsOptional, IsString } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 import { Transform } from "class-transformer";
 
-export class FindPersonsRequestDto {
+export class FindTracesRequestDto {
   @ApiProperty()
   @IsArray()
   @IsOptional()
