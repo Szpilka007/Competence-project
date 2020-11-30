@@ -13,6 +13,7 @@ import { HotspotService } from "./application/hotspot.service";
 import { TraceEntity } from "./infrastructure/entity/trace.entity";
 import { TraceRepository } from "./infrastructure/repository/trace.repository";
 import { TraceService } from "./application/trace.service";
+import { TraceController } from "./controller/trace.controller";
 
 dotenv.config();
 
@@ -29,6 +30,6 @@ dotenv.config();
     TypeOrmModule.forFeature([PersonRepository, Hotspot, TraceRepository]),
   ],
   providers: [PersonService, HotspotService, PersonGeneratorService, TraceService],
-  controllers: [AppController, PersonController, HotspotController],
+  controllers: [AppController, PersonController, HotspotController, TraceController],
 })
 export class AppModule {}
