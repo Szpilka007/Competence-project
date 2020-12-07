@@ -106,6 +106,10 @@ export class PersonService {
     await this.personRepository.delete(id);
   }
 
+  public async findAllPeople(): Promise<PersonEntity[]> {
+    return this.personRepository.find();
+  }
+
   private async isPhoneNumberUnique(phoneNumber: string) {
     this.logger.debug(`isPhoneNumberUnique ${JSON.stringify(phoneNumber)}`);
     return !(
@@ -114,4 +118,5 @@ export class PersonService {
       })
     )[0];
   }
+
 }

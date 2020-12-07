@@ -21,11 +21,12 @@ import { FindPersonsRequestDto } from "../dto/request/person/find-persons-reques
 import { SinglePersonResponseDto } from "../dto/response/person/single-person-response.dto";
 import { CreatePersonRequestDto } from "../dto/request/person/create-person-request.dto";
 import { CreatePersonResponseDto } from "../dto/response/person/create-person-response.dto";
+import { PersonGeneratorService } from "../application/person-generator.service";
 
 @ApiTags("Person")
 @Controller("persons")
 export class PersonController {
-  public constructor(private personService: PersonService) {}
+  public constructor(private personService: PersonService, private generator: PersonGeneratorService) {}
 
   @ApiResponse({
     type: CreatePersonResponseDto,

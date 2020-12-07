@@ -1,4 +1,4 @@
-import { CreateHotspotRequestDto } from "src/dto/request/create.hotspot.request.dto";
+import { CreateHotspotRequestDto } from "../../dto/request/create.hotspot.request.dto";
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("hotspots")

@@ -14,6 +14,11 @@ import { TraceEntity } from "./infrastructure/entity/trace.entity";
 import { TraceRepository } from "./infrastructure/repository/trace.repository";
 import { TraceService } from "./application/trace.service";
 import { TraceController } from "./controller/trace.controller";
+import { CommandModule } from 'nestjs-command';
+import { StayPointRepository } from "./infrastructure/repository/stayPoint.repository";
+import { StayPointService } from "./application/stayPoint.service";
+import { StayPointCommand } from "./domain/stayPoint/stayPoint.command";
+import { StayPointEntity } from "./infrastructure/entity/stayPoint.entity";
 
 dotenv.config();
 
@@ -22,14 +27,15 @@ dotenv.config();
     TypeOrmModule.forRoot({
       type: "postgres",
       url: process.env.POSTGRES_DATABASE_URL,
-      entities: [PersonEntity, Hotspot, TraceEntity],
+      entities: [PersonEntity, Hotspot, TraceEntity, StayPointEntity],
       extra: {
         ...(process.env.NODE_ENV !== "local" ? { ssl: { rejectUnauthorized: false } } : {}),
       },
     }),
-    TypeOrmModule.forFeature([PersonRepository, Hotspot, TraceRepository]),
+    TypeOrmModule.forFeature([PersonRepository, Hotspot, TraceRepository, StayPointRepository]),
+    CommandModule
   ],
-  providers: [PersonService, HotspotService, PersonGeneratorService, TraceService],
+  providers: [PersonService, HotspotService, PersonGeneratorService, TraceService, StayPointService, StayPointCommand],
   controllers: [AppController, PersonController, HotspotController, TraceController],
 })
 export class AppModule {}
