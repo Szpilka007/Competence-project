@@ -1,9 +1,6 @@
 const {defaults} = require('jest-config');
 
 module.exports = {
-	roots: [
-		"./services/gateway/test",
-	],
 	preset: 'ts-jest',
 	moduleFileExtensions: [
 		...defaults.moduleFileExtensions,
@@ -14,7 +11,7 @@ module.exports = {
 	globals: {
 		"ts-jest": {
 			diagnostics: false,
-			tsConfig: "./tsconfig.json",
+			tsconfig: "./tsconfig.json",
 			isolatedModules: true
 		}
 	},
