@@ -3,6 +3,7 @@ import { v4 as uuid } from "uuid";
 import { TraceRepository } from "../infrastructure/repository/trace.repository";
 import { Trace } from "../domain/trace/trace";
 import { TraceEntity } from "../infrastructure/entity/trace.entity";
+import { ApiGatewayTimeoutResponse } from "@nestjs/swagger";
 
 @Injectable()
 export class TraceService {
@@ -52,6 +53,10 @@ export class TraceService {
     return await this.traceRepository.findOne({
       where: { id },
     });
+  }
+
+  public async getAllTraces(): Promise<TraceEntity[]> {
+    return this.traceRepository.find()
   }
 
   public async removeTrace(id: string): Promise<void> {
