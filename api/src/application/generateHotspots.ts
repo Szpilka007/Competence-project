@@ -66,4 +66,5 @@ function getRandomHotspotType() {
     return HOTSPOT_TYPES[Math.floor(Math.random() * (HOTSPOT_TYPES.length))];
 }
 
+module.exports = {lambda, getRandomHotspotType, phi };
 
