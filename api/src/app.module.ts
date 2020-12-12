@@ -4,7 +4,6 @@ import { PersonEntity } from "./infrastructure/entity/person.entity";
 import { PersonRepository } from "./infrastructure/repository/person.repository";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { PersonService } from "./application/person.service";
-import { PersonGeneratorService } from "./application/person-generator.service";
 import dotenv from "dotenv";
 import { PersonController } from "./controller/person.controller";
 import { HotspotController } from "./controller/hotspot.controller";
@@ -17,8 +16,10 @@ import { TraceController } from "./controller/trace.controller";
 import { CommandModule } from 'nestjs-command';
 import { StayPointRepository } from "./infrastructure/repository/stayPoint.repository";
 import { StayPointService } from "./application/stayPoint.service";
-import { StayPointCommand } from "./domain/stayPoint/stayPoint.command";
+import { StayPointCommand } from "./commands/stayPoint.command";
 import { StayPointEntity } from "./infrastructure/entity/stayPoint.entity";
+import { GenerateHotspotsCommand } from "./commands/generateHotspots.command";
+import { GeneratePersonsCommand } from "./commands/generatePersons.command";
 
 dotenv.config();
 
@@ -35,7 +36,7 @@ dotenv.config();
     TypeOrmModule.forFeature([PersonRepository, Hotspot, TraceRepository, StayPointRepository]),
     CommandModule
   ],
-  providers: [PersonService, HotspotService, PersonGeneratorService, TraceService, StayPointService, StayPointCommand],
+  providers: [PersonService, HotspotService, TraceService, StayPointService, StayPointCommand, GenerateHotspotsCommand, GeneratePersonsCommand],
   controllers: [AppController, PersonController, HotspotController, TraceController],
 })
 export class AppModule {}
