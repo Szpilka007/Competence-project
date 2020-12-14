@@ -1,7 +1,7 @@
 import { Command } from 'nestjs-command';
 import { Injectable } from '@nestjs/common';
-import { StayPointService } from '../../application/stayPoint.service';
-import { TraceService } from '../../application/trace.service';
+import { StayPointService } from '../application/stayPoint.service';
+import { TraceService } from '../application/trace.service';
 
 @Injectable()
 export class StayPointCommand {
