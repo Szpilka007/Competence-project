@@ -1,7 +1,8 @@
-import { Command } from 'nestjs-command';
-import { Injectable } from '@nestjs/common';
+import { Command, Positional } from 'nestjs-command';
+import { Injectable, Logger } from '@nestjs/common';
 import { Hotspot } from "../infrastructure/entity/hotspot";
-import { createConnection } from "typeorm";
+import { HotspotService } from '../application/hotspot.service';
+import prob from "prob.js"
 
 const EARTH_RADIUS: number = 6357.0;
 const CENTER_LATITUDE: number = 51.747192 * Math.PI / 180.0;
@@ -23,42 +24,50 @@ const HOTSPOT_TYPES = [
 
 @Injectable()
 export class GenerateHotspotsCommand {
+  public constructor(private readonly hotspotService: HotspotService) { }
+
   @Command({
     command: 'generateHotspots',
     describe: 'generates hotspot',
     autoExit: true // defaults to `true`, but you can use `false` if you need more control
   })
-  async exec(): Promise<void> {
-    createConnection({
-      type: 'postgres',
-      url: process.env.POSTGRES_DATABASE_URL,
-      entities: [Hotspot]
-    }).then((connection) => {
+  async exec(
+    @Positional({
+      name: 'amount',
+      alias: 'a',
+      describe: 'number of hotspots to generate',
+      type: 'number',
+    })
+    amount: number,
+  ): Promise<void> {
+    const exponential = prob.exponential(1.0);
 
-      const prob = require('prob.js');
-      const exponential = prob.exponential(1.0);
+    const bulkSize = 10000
+    let bulk: Hotspot[] = []
 
-      const hotspotCount: number = process.argv[2] == undefined ? 10 : Number(process.argv[2]);
-
-      for (let i = 0; i < hotspotCount; i++) {
-        let angle: number = Math.random() * 2 * Math.PI;
-        let distance: number = exponential();
-        let latitude: number = this.phi(distance, angle) * 180 / Math.PI;
-        let longitude: number = this.lambda(distance, angle, latitude) * 180 / Math.PI;
-        let hotspotType = this.getRandomHotspotType();
-        let hotspot = Hotspot.fromRequestDto({
-          name: hotspotType.place,
-          latitude: latitude,
-          longitude: longitude,
-          type: hotspotType.type,
-          description: hotspotType.description
-        });
-        connection.manager.save(hotspot).then(() => { });
+    for (let i = 0; i < amount; i++) {
+      let angle: number = Math.random() * 2 * Math.PI;
+      let distance: number = exponential();
+      let latitude: number = this.phi(distance, angle) * 180 / Math.PI;
+      let longitude: number = this.lambda(distance, angle, latitude) * 180 / Math.PI;
+      let hotspotType = this.getRandomHotspotType();
+      let hotspot = Hotspot.fromRequestDto({
+        name: hotspotType.place,
+        latitude: latitude,
+        longitude: longitude,
+        type: hotspotType.type,
+        description: hotspotType.description
+      });
+      bulk.push(hotspot)
+      if (i % bulkSize == bulkSize - 1) {
+        await this.hotspotService.bulkSave(bulk) 
+        bulk = []
       }
+      if (i % Math.floor(amount / 100) == 0) Logger.log("Generated hotspot #" + i);
+    }
+    await this.hotspotService.bulkSave(bulk)
 
-      return;
-
-    }).catch(error => console.log(error));
+    await this.hotspotService.getCount()
   }
 
   phi(distance: number, angle: number): number {

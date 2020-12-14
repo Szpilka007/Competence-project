@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { Connection, Repository } from "typeorm";
 import { Hotspot } from "../infrastructure/entity/hotspot";
 
 @Injectable()
@@ -8,6 +8,7 @@ export class HotspotService {
   constructor(
     @InjectRepository(Hotspot)
     private repository: Repository<Hotspot>,
+    private connection: Connection,
   ) { }
 
   async findAll(): Promise<Hotspot[]> {
@@ -26,5 +27,15 @@ export class HotspotService {
   async save(hotspot: Hotspot): Promise<Hotspot> {
     let result = await this.repository.save(hotspot);
     return result;
+  }
+
+  async bulkSave(hotspots: Hotspot[]): Promise<void> {
+    await this.repository.save(hotspots);
+  }
+
+  async getCount(): Promise<void> {
+    const queryBuilder = this.repository.createQueryBuilder();
+    let result = await queryBuilder.select("COUNT(*)");
+    await result.getRawOne().then(val => console.log(val))
   }
 }
