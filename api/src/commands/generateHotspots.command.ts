@@ -66,8 +66,6 @@ export class GenerateHotspotsCommand {
       if (i % Math.floor(amount / 100) == 0) Logger.log("Generated hotspot #" + i);
     }
     await this.hotspotService.bulkSave(bulk)
-
-    await this.hotspotService.getCount()
   }
 
   phi(distance: number, angle: number): number {

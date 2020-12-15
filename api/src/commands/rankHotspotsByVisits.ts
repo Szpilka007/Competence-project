@@ -12,6 +12,9 @@ export class RankHotspotsByVisits {
     autoExit: true
   })
   async exec(): Promise<void> {
-    console.log("QWDNQWOINDOIWQND")
+    let result = await this.hotspotService.findAll()
+    console.log("Loaded all data")
+    await new Promise(resolve => setTimeout(resolve, 100000));
+    console.log(result.length)
   }
 }
