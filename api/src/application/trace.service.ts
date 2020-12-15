@@ -3,7 +3,6 @@ import { v4 as uuid } from "uuid";
 import { TraceRepository } from "../infrastructure/repository/trace.repository";
 import { Trace } from "../domain/trace/trace";
 import { TraceEntity } from "../infrastructure/entity/trace.entity";
-import { ApiGatewayTimeoutResponse } from "@nestjs/swagger";
 
 @Injectable()
 export class TraceService {
