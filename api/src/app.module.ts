@@ -21,6 +21,7 @@ import { StayPointEntity } from "./infrastructure/entity/stayPoint.entity";
 import { GenerateHotspotsCommand } from "./commands/generateHotspots.command";
 import { GeneratePersonsCommand } from "./commands/generatePersons.command";
 import { RankHotspotsByVisits } from "./commands/rankHotspotsByVisits";
+import { GenerateTracesCommand } from "./commands/generateTraces.command";
 
 dotenv.config();
 
@@ -37,7 +38,7 @@ dotenv.config();
     TypeOrmModule.forFeature([PersonRepository, Hotspot, TraceRepository, StayPointRepository]),
     CommandModule
   ],
-  providers: [PersonService, HotspotService, TraceService, StayPointService, StayPointCommand, GenerateHotspotsCommand, GeneratePersonsCommand, RankHotspotsByVisits],
+  providers: [PersonService, HotspotService, TraceService, StayPointService, StayPointCommand, GenerateHotspotsCommand, GeneratePersonsCommand, RankHotspotsByVisits, GenerateTracesCommand],
   controllers: [AppController, PersonController, HotspotController, TraceController],
 })
 export class AppModule {}
