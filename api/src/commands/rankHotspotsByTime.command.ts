@@ -11,7 +11,7 @@ export class RankHotspotsByTime {
                        private readonly hotspotTimeStatService: HotspotTimeStatService) { }
 
     @Command({
-        command: 'rankHotspotsByTime',
+        command: 'rankHotspots:time',
         describe: 'ranks hotspots by total stay time',
         autoExit: true
     })
