@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { Person } from "../domain/person/person";
 import { PersonService } from "../application/person.service";
 import faker from 'faker';
@@ -23,6 +23,7 @@ export class GeneratePersonsCommand {
     amount: number,
   ): Promise<void> {
     for (let i = 0; i < amount; i += 1) {
+      Logger.log("Creating person #" + i);
       await this.personService.createPerson(new Person(faker.random.uuid(), faker.name.findName(), faker.name.lastName(), faker.phone.phoneNumber(), faker.name.jobTitle()))
         .then(() => {});
     }
