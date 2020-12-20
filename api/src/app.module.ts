@@ -9,6 +9,8 @@ import { PersonController } from "./controller/person.controller";
 import { HotspotController } from "./controller/hotspot.controller";
 import { Hotspot } from "./infrastructure/entity/hotspot";
 import { HotspotService } from "./application/hotspot.service";
+import { PhoneLookUpEntity } from "./infrastructure/entity/phoneLookUp.entity";
+import { PhoneLookUpRepository } from "./infrastructure/repository/phoneLookUp.repository";
 import { TraceEntity } from "./infrastructure/entity/trace.entity";
 import { TraceRepository } from "./infrastructure/repository/trace.repository";
 import { TraceService } from "./application/trace.service";
@@ -31,12 +33,12 @@ dotenv.config();
     TypeOrmModule.forRoot({
       type: "postgres",
       url: process.env.POSTGRES_DATABASE_URL,
-      entities: [PersonEntity, Hotspot, TraceEntity, StayPointEntity],
+      entities: [PersonEntity, Hotspot, TraceEntity, StayPointEntity, PhoneLookUpEntity],
       extra: {
         ...(process.env.NODE_ENV !== "local" ? { ssl: { rejectUnauthorized: false } } : {}),
       },
     }),
-    TypeOrmModule.forFeature([PersonRepository, Hotspot, TraceRepository, StayPointRepository]),
+    TypeOrmModule.forFeature([PersonRepository, Hotspot, TraceRepository, StayPointRepository, PhoneLookUpRepository]),
     CommandModule
   ],
   providers: [PersonService, HotspotService, TraceService, StayPointService, StayPointCommand, GenerateHotspotsCommand, GeneratePersonsCommand, RankHotspotsByVisits, GenerateTracesCommand, checkDatabase],
