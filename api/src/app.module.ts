@@ -23,6 +23,7 @@ import { GeneratePersonsCommand } from "./commands/generatePersons.command";
 import { RankHotspotsByVisits } from "./commands/rankHotspotsByVisits";
 import { GenerateTracesCommand } from "./commands/generateTraces.command";
 import { checkDatabase } from "./commands/checkDatabase.command";
+import { IdentifyMostPopulatStayPointsCommand } from "./commands/identifyMostPopularPoints";
 
 dotenv.config();
 
@@ -39,7 +40,7 @@ dotenv.config();
     TypeOrmModule.forFeature([PersonRepository, Hotspot, TraceRepository, StayPointRepository]),
     CommandModule
   ],
-  providers: [PersonService, HotspotService, TraceService, StayPointService, StayPointCommand, GenerateHotspotsCommand, GeneratePersonsCommand, RankHotspotsByVisits, GenerateTracesCommand, checkDatabase],
+  providers: [PersonService, HotspotService, TraceService, StayPointService, StayPointCommand, GenerateHotspotsCommand, GeneratePersonsCommand, RankHotspotsByVisits, GenerateTracesCommand, checkDatabase, IdentifyMostPopulatStayPointsCommand],
   controllers: [AppController, PersonController, HotspotController, TraceController],
 })
 export class AppModule {}

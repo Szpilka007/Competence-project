@@ -55,7 +55,7 @@ export class TraceService {
   }
 
   public async getAllTraces(): Promise<TraceEntity[]> {
-    return this.traceRepository.find()
+    return await this.traceRepository.find()
   }
 
   public async removeTrace(id: string): Promise<void> {
