@@ -23,6 +23,10 @@ import { GeneratePersonsCommand } from "./commands/generatePersons.command";
 import { RankHotspotsByVisits } from "./commands/rankHotspotsByVisits";
 import { GenerateTracesCommand } from "./commands/generateTraces.command";
 import { checkDatabase } from "./commands/checkDatabase.command";
+import {RankHotspotsByTime} from "./commands/rankHotspotsByTime.command";
+import {HotspotTimeStatsEntity} from "./infrastructure/entity/hotspot.time.stats.entity";
+import {HotspotTimeStatRepository} from "./infrastructure/repository/hotspot.time.stat.repository";
+import {HotspotTimeStatService} from "./application/hotspot.time.stat.service";
 
 dotenv.config();
 
@@ -31,15 +35,15 @@ dotenv.config();
     TypeOrmModule.forRoot({
       type: "postgres",
       url: process.env.POSTGRES_DATABASE_URL,
-      entities: [PersonEntity, Hotspot, TraceEntity, StayPointEntity],
+      entities: [PersonEntity, Hotspot, TraceEntity, StayPointEntity, HotspotTimeStatsEntity],
       extra: {
         ...(process.env.NODE_ENV !== "local" ? { ssl: { rejectUnauthorized: false } } : {}),
       },
     }),
-    TypeOrmModule.forFeature([PersonRepository, Hotspot, TraceRepository, StayPointRepository]),
+    TypeOrmModule.forFeature([PersonRepository, Hotspot, TraceRepository, StayPointRepository, HotspotTimeStatRepository]),
     CommandModule
   ],
-  providers: [PersonService, HotspotService, TraceService, StayPointService, StayPointCommand, GenerateHotspotsCommand, GeneratePersonsCommand, RankHotspotsByVisits, GenerateTracesCommand, checkDatabase],
+  providers: [PersonService, HotspotService, TraceService, StayPointService, StayPointCommand, HotspotTimeStatService, GenerateHotspotsCommand, GeneratePersonsCommand, RankHotspotsByVisits, GenerateTracesCommand, checkDatabase, RankHotspotsByTime],
   controllers: [AppController, PersonController, HotspotController, TraceController],
 })
 export class AppModule {}
