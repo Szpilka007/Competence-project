@@ -6,6 +6,7 @@ import { v4 as uuid } from "uuid";
 import { TraceRepository } from '../infrastructure/repository/trace.repository';
 import { PersonService } from '../application/person.service';
 import { HotspotService } from '../application/hotspot.service';
+import { PhoneLookUpRepository } from '../infrastructure/repository/phoneLookUp.repository';
 import { TraceEntity } from '../infrastructure/entity/trace.entity';
 import { HotspotController } from 'src/controller/hotspot.controller';
 
@@ -15,7 +16,8 @@ export class checkDatabase {
     private readonly traceService: TraceService, 
     private readonly traceRepository: TraceRepository,
     private readonly personService: PersonService,
-    private readonly hotspotService: HotspotService
+    private readonly phoneLookUpRepository: PhoneLookUpRepository,
+    private readonly hotspotService: HotspotService,
     ) { }
 
   @Command({
@@ -36,10 +38,14 @@ export class checkDatabase {
     let persons = await this.personService.findAllPeople();
     let hotspots = await this.hotspotService.findAll();
     let traces = await this.traceService.getAllTraces();
+    
+    let phoneLoopUp = await this.phoneLookUpRepository.find();
 
     if(verbose){
-        console.log("First 5 Persons:")
+        console.log("First 5 Persons:");
         console.log(persons.slice(0,5));
+        console.log("PhoneLookUp:");
+        console.log(phoneLoopUp.slice(0,5));
         console.log("First 5 Hotspots:")
         console.log(hotspots.slice(0,5));
         console.log("First 5 Traces:")
