@@ -25,6 +25,8 @@ import { GeneratePersonsCommand } from "./commands/generatePersons.command";
 import { RankHotspotsByVisits } from "./commands/rankHotspotsByVisits";
 import { GenerateTracesCommand } from "./commands/generateTraces.command";
 import { checkDatabase } from "./commands/checkDatabase.command";
+import { HotspotStatsService } from "./application/hotspot.stats.service";
+import { HotstpotVisitStatsEntity } from "./infrastructure/entity/hotspot.visits.stat.entity";
 import { IdentifyMostPopulatStayPointsCommand } from "./commands/identifyMostPopularPoints";
 import {RankHotspotsByTime} from "./commands/rankHotspotsByTime.command";
 import {HotspotTimeStatsEntity} from "./infrastructure/entity/hotspot.time.stats.entity";
@@ -38,15 +40,15 @@ dotenv.config();
     TypeOrmModule.forRoot({
       type: "postgres",
       url: process.env.POSTGRES_DATABASE_URL,
-      entities: [PersonEntity, Hotspot, TraceEntity, StayPointEntity, HotspotTimeStatsEntity, PhoneLookUpEntity],
+      entities: [PersonEntity, Hotspot, TraceEntity, StayPointEntity, HotspotTimeStatsEntity, PhoneLookUpEntity, HotstpotVisitStatsEntity],
       extra: {
         ...(process.env.NODE_ENV !== "local" ? { ssl: { rejectUnauthorized: false } } : {}),
       },
     }),
-    TypeOrmModule.forFeature([PersonRepository, Hotspot, TraceRepository, StayPointRepository, HotspotTimeStatRepository, PhoneLookUpRepository]),
+    TypeOrmModule.forFeature([PersonRepository, Hotspot, TraceRepository, StayPointRepository, HotspotTimeStatRepository, PhoneLookUpRepository, HotstpotVisitStatsEntity]),
     CommandModule
   ],
-  providers: [PersonService, HotspotService, TraceService, StayPointService, StayPointCommand, HotspotTimeStatService, GenerateHotspotsCommand, GeneratePersonsCommand, RankHotspotsByVisits, GenerateTracesCommand, checkDatabase, RankHotspotsByTime, IdentifyMostPopulatStayPointsCommand],
+  providers: [PersonService, HotspotService, TraceService, StayPointService, StayPointCommand, HotspotTimeStatService, GenerateHotspotsCommand, GeneratePersonsCommand, RankHotspotsByVisits, GenerateTracesCommand, checkDatabase, RankHotspotsByTime, IdentifyMostPopulatStayPointsCommand, HotspotStatsService],
   controllers: [AppController, PersonController, HotspotController, TraceController],
 })
-export class AppModule {}
+export class AppModule { }
