@@ -8,8 +8,8 @@ export class HotspotService {
   constructor(
     @InjectRepository(Hotspot)
     private repository: Repository<Hotspot>,
-    private connection: Connection,
-  ) { }
+    private connection: Connection
+  ) {}
 
   async findAll(): Promise<Hotspot[]> {
     return await this.repository.find();
@@ -36,6 +36,6 @@ export class HotspotService {
   async getCount(): Promise<void> {
     const queryBuilder = this.repository.createQueryBuilder();
     let result = await queryBuilder.select("COUNT(*)");
-    await result.getRawOne().then(val => console.log(val))
+    await result.getRawOne().then((val) => console.log(val));
   }
 }

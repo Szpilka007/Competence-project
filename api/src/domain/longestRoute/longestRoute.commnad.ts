@@ -1,10 +1,10 @@
-import { Command } from 'nestjs-command';
-import { Injectable } from '@nestjs/common';
-import { TraceService } from '../../application/trace.service';
-import { LongestRouteService } from '../../application/longestRoute.service';
-import { PersonService } from '../../application/person.service';
-import { distanceBetweenPoints } from '../../utils/distanceBetweenPoints';
-import { HotspotService } from '../../application/hotspot.service';
+import { Command } from "nestjs-command";
+import { Injectable } from "@nestjs/common";
+import { TraceService } from "../../application/trace.service";
+import { LongestRouteService } from "../../application/longestRoute.service";
+import { PersonService } from "../../application/person.service";
+import { distanceBetweenPoints } from "../../utils/distanceBetweenPoints";
+import { HotspotService } from "../../application/hotspot.service";
 
 @Injectable()
 export class LongestRouteCommand {
@@ -16,17 +16,15 @@ export class LongestRouteCommand {
   ) {}
 
   @Command({
-    command: 'calculate:LongestRoutes',
-    describe: 'calculate longest route for each person',
-    autoExit: true // defaults to `true`, but you can use `false` if you need more control
+    command: "calculate:LongestRoutes",
+    describe: "calculate longest route for each person",
+    autoExit: true, // defaults to `true`, but you can use `false` if you need more control
   })
-
   async create(): Promise<void> {
-
     const people = await this.peopleService.findAllPeople();
     const hotspots = await this.hotspotService.findAll();
 
-    const peopleTraces = await Promise.all(people.map((person) => this.traceService.getTraceForPerson(person.id)))
+    const peopleTraces = await Promise.all(people.map((person) => this.traceService.getTraceForPerson(person.id)));
 
     const logestRoutes = peopleTraces.map((val) => {
       let longestRoute = 0;
@@ -34,28 +32,31 @@ export class LongestRouteCommand {
         val.traces.forEach((innerTrace) => {
           const innerHotspot = hotspots.find((h) => h.id === innerTrace.hotspotId);
           const hotspot = hotspots.find((h) => h.id === trace.hotspotId);
-          const distance = distanceBetweenPoints(innerHotspot.latitude, hotspot.latitude, innerHotspot.longitude, hotspot.longitude);
-          if(distance > longestRoute) {
+          const distance = distanceBetweenPoints(
+            innerHotspot.latitude,
+            hotspot.latitude,
+            innerHotspot.longitude,
+            hotspot.longitude
+          );
+          if (distance > longestRoute) {
             longestRoute = distance;
           }
-        })
-      })
-      return ({
+        });
+      });
+      return {
         personId: val.personId,
-        routeLength: longestRoute
-      })
-    })
+        routeLength: longestRoute,
+      };
+    });
 
     await Promise.all(logestRoutes.map((route) => this.longestRouteService.createRotue(route)));
-
-  };
+  }
 
   @Command({
-    command: 'get:LongestRoutes',
-    describe: 'get all longest route for each person',
-    autoExit: true // defaults to `true`, but you can use `false` if you need more control
+    command: "get:LongestRoutes",
+    describe: "get all longest route for each person",
+    autoExit: true, // defaults to `true`, but you can use `false` if you need more control
   })
-
   async get(): Promise<void> {
     const traces = await this.longestRouteService.getLongestRoutes();
     console.log(traces);

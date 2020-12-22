@@ -14,7 +14,7 @@ export class Hotspot {
 
   @Column({ type: "real" })
   public longitude: number;
-  
+
   @Column({ type: "real" })
   public latitude: number;
 

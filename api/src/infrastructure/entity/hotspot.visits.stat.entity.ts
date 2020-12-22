@@ -11,5 +11,5 @@ export class HotstpotVisitStatsEntity {
   constructor(hotspotId: string, visits: number) {
     this.hotspotId = hotspotId;
     this.visits = visits;
-  };
+  }
 }

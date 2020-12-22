@@ -10,7 +10,7 @@ export class PhoneLookUpRepository extends Repository<PhoneLookUpEntity> {
     fakeNumbers?: string[];
     realNumbers?: string[];
   }): Promise<{ total: number; offset: number; limit: number; data: PhoneLookUpEntity[] }> {
-    const { limit, offset, ids, fakeNumbers, realNumbers} = payload;
+    const { limit, offset, ids, fakeNumbers, realNumbers } = payload;
 
     let query = await this.createQueryBuilder("p").select();
 
