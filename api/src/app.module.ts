@@ -25,6 +25,7 @@ import { GeneratePersonsCommand } from "./commands/generatePersons.command";
 import { RankHotspotsByVisits } from "./commands/rankHotspotsByVisits";
 import { GenerateTracesCommand } from "./commands/generateTraces.command";
 import { checkDatabase } from "./commands/checkDatabase.command";
+import { IdentifyMostPopulatStayPointsCommand } from "./commands/identifyMostPopularPoints";
 import {RankHotspotsByTime} from "./commands/rankHotspotsByTime.command";
 import {HotspotTimeStatsEntity} from "./infrastructure/entity/hotspot.time.stats.entity";
 import {HotspotTimeStatRepository} from "./infrastructure/repository/hotspot.time.stat.repository";
@@ -45,7 +46,7 @@ dotenv.config();
     TypeOrmModule.forFeature([PersonRepository, Hotspot, TraceRepository, StayPointRepository, HotspotTimeStatRepository, PhoneLookUpRepository]),
     CommandModule
   ],
-  providers: [PersonService, HotspotService, TraceService, StayPointService, StayPointCommand, HotspotTimeStatService, GenerateHotspotsCommand, GeneratePersonsCommand, RankHotspotsByVisits, GenerateTracesCommand, checkDatabase, RankHotspotsByTime],
+  providers: [PersonService, HotspotService, TraceService, StayPointService, StayPointCommand, HotspotTimeStatService, GenerateHotspotsCommand, GeneratePersonsCommand, RankHotspotsByVisits, GenerateTracesCommand, checkDatabase, RankHotspotsByTime, IdentifyMostPopulatStayPointsCommand],
   controllers: [AppController, PersonController, HotspotController, TraceController],
 })
 export class AppModule {}
