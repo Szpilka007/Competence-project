@@ -4,8 +4,8 @@ import { TraceService } from '../application/trace.service';
 import { TraceRepository } from '../infrastructure/repository/trace.repository';
 import { PersonService } from '../application/person.service';
 import { HotspotService } from '../application/hotspot.service';
-import mode from 'src/utils/mode';
-import { Hotspot } from 'src/infrastructure/entity/hotspot';
+import mode from '../utils/mode';
+import { Hotspot } from '../infrastructure/entity/hotspot';
 import { createObjectCsvWriter } from 'csv-writer';
 
 @Injectable()
