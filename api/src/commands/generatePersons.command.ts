@@ -21,9 +21,16 @@ export class GeneratePersonsCommand {
       type: 'number',
     })
     amount: number,
+    @Positional({
+      name: 'fake',
+      alias: 'f',
+      describe: 'generate fake numbers and lookup',
+      type: 'boolean',
+    })
+    fake: boolean
   ): Promise<void> {
     for (let i = 0; i < amount; i += 1) {
-      await this.personService.createPerson(new Person(faker.random.uuid(), faker.name.findName(), faker.name.lastName(), faker.phone.phoneNumber(), faker.name.jobTitle()))
+      await this.personService.createPerson(new Person(faker.random.uuid(), faker.name.findName(), faker.name.lastName(), faker.phone.phoneNumber(), faker.name.jobTitle()), fake)
         .then(() => {});
     }
   }
