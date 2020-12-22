@@ -1,37 +1,45 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { v4 as uuid } from "uuid";
 import { PersonRepository } from "../infrastructure/repository/person.repository";
-import { PhoneLookUpRepository } from "../infrastructure/repository/phoneLookUp.repository"
+import { PhoneLookUpRepository } from "../infrastructure/repository/phoneLookUp.repository";
 import { Person } from "../domain/person/person";
 import { PhoneLookUp } from "../domain/lookup/phone";
 import { PersonEntity } from "../infrastructure/entity/person.entity";
 import { PhoneLookUpEntity } from "../infrastructure/entity/phoneLookUp.entity";
-import faker from 'faker';
+import faker from "faker";
 
 @Injectable()
 export class PersonService {
-  public constructor(private readonly personRepository: PersonRepository, private readonly phoneLookUpRepository: PhoneLookUpRepository) {}
+  public constructor(
+    private readonly personRepository: PersonRepository,
+    private readonly phoneLookUpRepository: PhoneLookUpRepository
+  ) {}
   private logger: Logger = new Logger(PersonService.name);
 
-  public async createPerson(payload: {
-    firstName: string;
-    lastName: string;
-    phoneNumber: string;
-    profile: string;
-  }, fake = true): Promise<{ id: string }> {
+  public async createPerson(
+    payload: {
+      firstName: string;
+      lastName: string;
+      phoneNumber: string;
+      profile: string;
+    },
+    fake = true
+  ): Promise<{ id: string }> {
     this.logger.debug(`createPerson ${JSON.stringify(payload)}`);
-  
+
     if (!this.isPhoneNumberUnique) {
       throw new Error("Given phone number is already used");
     }
 
     const { firstName, lastName, phoneNumber, profile } = payload;
     var person;
-    if(fake){
+    if (fake) {
       const fakeNumber = faker.phone.phoneNumber();
-      await this.phoneLookUpRepository.save(PhoneLookUpEntity.fromDomainObject(new PhoneLookUp(uuid(), fakeNumber, phoneNumber)));
+      await this.phoneLookUpRepository.save(
+        PhoneLookUpEntity.fromDomainObject(new PhoneLookUp(uuid(), fakeNumber, phoneNumber))
+      );
       person = new Person(uuid(), firstName, lastName, fakeNumber, profile);
-    }else{
+    } else {
       person = new Person(uuid(), firstName, lastName, phoneNumber, profile);
     }
 
@@ -117,9 +125,11 @@ export class PersonService {
     var person = await this.personRepository.findOne({
       where: { id },
     });
-    person.phoneNumber = (await this.phoneLookUpRepository.find({
-      where: { fakeNumber: person.phoneNumber },
-    }))[0].realNumber;
+    person.phoneNumber = (
+      await this.phoneLookUpRepository.find({
+        where: { fakeNumber: person.phoneNumber },
+      })
+    )[0].realNumber;
 
     return person;
   }
@@ -132,9 +142,9 @@ export class PersonService {
       throw new Error(`Person with given ID (${id}) doesn't exist`);
     }
 
-    const lookUpEntity = await this.phoneLookUpRepository.findOne({fakeNumber: personEntity.phoneNumber});
+    const lookUpEntity = await this.phoneLookUpRepository.findOne({ fakeNumber: personEntity.phoneNumber });
     if (lookUpEntity) {
-      await this.phoneLookUpRepository.delete(lookUpEntity)
+      await this.phoneLookUpRepository.delete(lookUpEntity);
     }
 
     await this.personRepository.delete(id);
@@ -146,12 +156,12 @@ export class PersonService {
 
   public async findAllPeopleWithRealNumbers(): Promise<PersonEntity[]> {
     var loopkup = await this.phoneLookUpRepository.find();
-    var out = this.personRepository.find().then(people=>{
-      return people.map(person=>{
-        var realNumber = loopkup.find(el=>el.fakeNumber == person.phoneNumber).realNumber
+    var out = this.personRepository.find().then((people) => {
+      return people.map((person) => {
+        var realNumber = loopkup.find((el) => el.fakeNumber == person.phoneNumber).realNumber;
         person.phoneNumber = realNumber;
         return person;
-      })
+      });
     });
     return out;
   }
@@ -164,5 +174,4 @@ export class PersonService {
       })
     )[0];
   }
-
 }

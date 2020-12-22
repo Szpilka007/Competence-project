@@ -1,5 +1,5 @@
 import { BeforeInsert, BeforeUpdate, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { StayPoint } from "../../domain/stayPoint/stayPoint"
+import { StayPoint } from "../../domain/stayPoint/stayPoint";
 
 @Entity("stayPoints")
 export class StayPointEntity {

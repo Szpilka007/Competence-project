@@ -17,7 +17,7 @@ export class LongestRouteEntity {
 
   @Column({ default: new Date() })
   public createdAt: Date;
-  
+
   @BeforeInsert()
   protected onBeforeInsert() {
     this.createdAt = new Date();

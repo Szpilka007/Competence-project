@@ -7,8 +7,8 @@ import { Repository } from "typeorm";
 export class HotspotStatsService {
   constructor(
     @InjectRepository(HotstpotVisitStatsEntity)
-    private repository: Repository<HotstpotVisitStatsEntity>,
-  ) { }
+    private repository: Repository<HotstpotVisitStatsEntity>
+  ) {}
 
   async saveAllVisitStats(hotspotStats: HotstpotVisitStatsEntity[]): Promise<HotstpotVisitStatsEntity[]> {
     let result = await this.repository.save(hotspotStats);
