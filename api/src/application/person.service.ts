@@ -1,12 +1,16 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { v4 as uuid } from "uuid";
 import { PersonRepository } from "../infrastructure/repository/person.repository";
+import { PhoneLookUpRepository } from "../infrastructure/repository/phoneLookUp.repository"
 import { Person } from "../domain/person/person";
+import { PhoneLookUp } from "../domain/lookup/phone";
 import { PersonEntity } from "../infrastructure/entity/person.entity";
+import { PhoneLookUpEntity } from "../infrastructure/entity/phoneLookUp.entity";
+import faker from 'faker';
 
 @Injectable()
 export class PersonService {
-  public constructor(private readonly personRepository: PersonRepository) {}
+  public constructor(private readonly personRepository: PersonRepository, private readonly phoneLookUpRepository: PhoneLookUpRepository) {}
   private logger: Logger = new Logger(PersonService.name);
 
   public async createPerson(payload: {
@@ -14,15 +18,22 @@ export class PersonService {
     lastName: string;
     phoneNumber: string;
     profile: string;
-  }): Promise<{ id: string }> {
+  }, fake = true): Promise<{ id: string }> {
     this.logger.debug(`createPerson ${JSON.stringify(payload)}`);
-    const { firstName, lastName, phoneNumber, profile } = payload;
-
+  
     if (!this.isPhoneNumberUnique) {
       throw new Error("Given phone number is already used");
     }
 
-    const person = new Person(uuid(), firstName, lastName, phoneNumber, profile);
+    const { firstName, lastName, phoneNumber, profile } = payload;
+    var person;
+    if(fake){
+      const fakeNumber = faker.phone.phoneNumber();
+      await this.phoneLookUpRepository.save(PhoneLookUpEntity.fromDomainObject(new PhoneLookUp(uuid(), fakeNumber, phoneNumber)));
+      person = new Person(uuid(), firstName, lastName, fakeNumber, profile);
+    }else{
+      person = new Person(uuid(), firstName, lastName, phoneNumber, profile);
+    }
 
     await this.personRepository.save(PersonEntity.fromDomainObject(person));
 
@@ -96,11 +107,34 @@ export class PersonService {
     });
   }
 
-  public async removePerson(id: string): Promise<void> {
-    this.logger.debug(`removePerson ${JSON.stringify(id)}`);
+  public async getPersonWithRealNumber(id: string): Promise<PersonEntity> {
+    this.logger.debug(`getPerson ${JSON.stringify(id)}`);
     const personEntity = await this.personRepository.findOne(id);
     if (!personEntity) {
       throw new Error(`Person with given ID (${id}) doesn't exist`);
+    }
+
+    var person = await this.personRepository.findOne({
+      where: { id },
+    });
+    person.phoneNumber = (await this.phoneLookUpRepository.find({
+      where: { fakeNumber: person.phoneNumber },
+    }))[0].realNumber;
+
+    return person;
+  }
+
+  public async removePerson(id: string): Promise<void> {
+    this.logger.debug(`removePerson ${JSON.stringify(id)}`);
+
+    const personEntity = await this.personRepository.findOne(id);
+    if (!personEntity) {
+      throw new Error(`Person with given ID (${id}) doesn't exist`);
+    }
+
+    const lookUpEntity = await this.phoneLookUpRepository.findOne({fakeNumber: personEntity.phoneNumber});
+    if (lookUpEntity) {
+      await this.phoneLookUpRepository.delete(lookUpEntity)
     }
 
     await this.personRepository.delete(id);
@@ -110,11 +144,23 @@ export class PersonService {
     return this.personRepository.find();
   }
 
+  public async findAllPeopleWithRealNumbers(): Promise<PersonEntity[]> {
+    var loopkup = await this.phoneLookUpRepository.find();
+    var out = this.personRepository.find().then(people=>{
+      return people.map(person=>{
+        var realNumber = loopkup.find(el=>el.fakeNumber == person.phoneNumber).realNumber
+        person.phoneNumber = realNumber;
+        return person;
+      })
+    });
+    return out;
+  }
+
   private async isPhoneNumberUnique(phoneNumber: string) {
     this.logger.debug(`isPhoneNumberUnique ${JSON.stringify(phoneNumber)}`);
     return !(
-      await this.personRepository.find({
-        where: { phoneNumber },
+      await this.phoneLookUpRepository.find({
+        where: { realNumber: phoneNumber },
       })
     )[0];
   }
