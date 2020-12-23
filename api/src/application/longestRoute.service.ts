@@ -9,7 +9,7 @@ export class LongestRouteService {
   public constructor(private readonly longestRouteRepository: LongestRouteRepository) {}
   private logger: Logger = new Logger(LongestRouteService.name);
 
-  public async createRotue(payload: { personId: string; routeLength: Number }): Promise<{ id: string }> {
+  public async createRoute(payload: { personId: string; routeLength: Number }): Promise<{ id: string }> {
     this.logger.debug(`createLongestRoute ${JSON.stringify(payload)}`);
     const { personId, routeLength } = payload;
 
