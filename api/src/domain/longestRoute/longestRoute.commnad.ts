@@ -49,7 +49,7 @@ export class LongestRouteCommand {
       };
     });
 
-    await Promise.all(logestRoutes.map((route) => this.longestRouteService.createRotue(route)));
+    await Promise.all(logestRoutes.map((route) => this.longestRouteService.createRoute(route)));
   }
 
   @Command({
