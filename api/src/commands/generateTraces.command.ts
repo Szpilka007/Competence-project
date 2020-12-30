@@ -8,6 +8,9 @@ import { PersonService } from '../application/person.service';
 import { HotspotService } from '../application/hotspot.service';
 import { TraceEntity } from '../infrastructure/entity/trace.entity';
 import { HotspotController } from 'src/controller/hotspot.controller';
+// import { unirand } from 'unirand';
+const unirand = require('unirand');
+
 
 @Injectable()
 export class GenerateTracesCommand {
@@ -43,11 +46,24 @@ export class GenerateTracesCommand {
     let bulk: TraceEntity[] = []
 
     await this.traceRepository.query(`TRUNCATE TABLE traces;`);
-    
+    let randomIds = [];
+    for(let i = 0; i < bulkSize; i++){
+        randomIds.push(await unirand.weibull(1, 1.5).random());
+    }
+    let maxRandom = Math.max(...randomIds);
+    let ratio = maxRandom/(hotspotIDs.length-1);
+    randomIds = randomIds.map(v=>Math.round(v/ratio));
+    // let lookupId = [...Array(hotspotIDs.length).keys()];
+    // unirand.shuffle(lookupId);
+
     for (let i = 0; i < amount; i++) {
       let randomPersonId = personIDs[Math.floor(Math.random() * personIDs.length)];
-      let randomHotspotId = hotspotIDs[Math.floor(Math.random() * hotspotIDs.length)];
-      let randomEntryTime = new Date((new Date(2012, 0, 1)).getTime() + Math.random() * ((new Date()).getTime() - (new Date(2012, 0, 1)).getTime()));
+      // let randomHotspotId = hotspotIDs[Math.floor(Math.random() * hotspotIDs.length)];
+      // let randomHotspotId = hotspotIDs[lookupId[randomIds.pop()]];
+      let randomHotspotId = hotspotIDs[randomIds.pop()];
+
+      //random date from past two months
+      let randomEntryTime = new Date((new Date((new Date()).getTime() - 1000*60*60*24*60)).getTime() + Math.random() * ((new Date()).getTime() - (new Date((new Date()).getTime() - 1000*60*60*24*60)).getTime()));
       let randomStayTime = Math.floor(Math.random()*120+5); //minutes (min 5, max 120)
       let randomExitTime = new Date(randomEntryTime.getTime()+60000*randomStayTime);
     
@@ -56,7 +72,13 @@ export class GenerateTracesCommand {
       if (bulk.length == bulkSize) {
         await this.traceRepository.save(bulk);
         bulk = []
-        console.log("Saved " + i + " TraceEntity")
+        console.log("Saved " + i + " TraceEntity");
+        for(let i = 0; i < bulkSize; i++){
+            randomIds.push(await unirand.weibull(1, 1.5).random());
+        }
+        let maxRandom = Math.max(...randomIds);
+        let ratio = maxRandom/(hotspotIDs.length-1);
+        randomIds = randomIds.map(v=>Math.round(v/ratio));
       }
     }
     await this.traceRepository.save(bulk);
