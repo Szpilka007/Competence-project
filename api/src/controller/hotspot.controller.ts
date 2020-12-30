@@ -13,7 +13,7 @@ export class HotspotController {
   public async getAll(): Promise<Hotspot[]> {
     return this.hotspotService.findAll();
   }
-  
+
   @ApiResponse({
     type: CreateHotspotRequestDto,
   })
