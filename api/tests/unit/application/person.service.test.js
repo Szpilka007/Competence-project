@@ -1,4 +1,4 @@
-const service = require('../../src/application/person.service')
+const service = require('../../../src/application/person.service')
 
 test('function createPerson person service', () => {
     service.PersonService.prototype.createPerson('1').then((object) => {
