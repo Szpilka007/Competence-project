@@ -31,7 +31,7 @@ export class PersonController {
     type: CreatePersonResponseDto,
   })
   @Post("/")
-  public async createPatient(@Body() body: CreatePersonRequestDto): Promise<CreatePersonResponseDto> {
+  public async createPerson(@Body() body: CreatePersonRequestDto): Promise<CreatePersonResponseDto> {
     try {
       const result = await this.personService.createPerson(body);
       return { id: result.id };
@@ -61,7 +61,7 @@ export class PersonController {
     type: SinglePersonResponseDto,
   })
   @Get("/:id")
-  public async getPatientProfile(@Param("id") id: string): Promise<SinglePersonResponseDto> {
+  public async getPerson(@Param("id") id: string): Promise<SinglePersonResponseDto> {
     try {
       const patient = await this.personService.getPerson(id);
 

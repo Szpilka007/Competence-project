@@ -6,27 +6,27 @@ export class FindPersonsRequestDto {
   @ApiProperty()
   @IsArray()
   @IsOptional()
-  public readonly ids: string[];
+  public readonly ids?: string[];
 
   @ApiProperty()
   @IsArray()
   @IsOptional()
-  public readonly firstNames: string[];
+  public readonly firstNames?: string[];
 
   @ApiProperty()
   @IsArray()
   @IsOptional()
-  public readonly lastNames: string[];
+  public readonly lastNames?: string[];
 
   @ApiProperty()
   @IsArray()
   @IsOptional()
-  public readonly phoneNumbers: string[];
+  public readonly phoneNumbers?: string[];
 
   @ApiProperty()
   @IsArray()
   @IsOptional()
-  public readonly profiles: string[];
+  public readonly profiles?: string[];
 
   @ApiProperty()
   @IsInt()
