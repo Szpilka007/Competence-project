@@ -33,7 +33,7 @@ import { HotspotController } from "../../src/controller/hotspot.controller";
 import { TraceController } from "../../src/controller/trace.controller";
 
 export const setupAppTestModule = async () => {
-  const module = await Test.createTestingModule({
+  const moduleRef = await Test.createTestingModule({
     imports: [
       TypeOrmModule.forRoot({
         type: "postgres",
@@ -47,9 +47,9 @@ export const setupAppTestModule = async () => {
           PhoneLookUpEntity,
           HotstpotVisitStatsEntity,
         ],
-        extra: {
-          ...(process.env.NODE_ENV !== "local" ? { ssl: { rejectUnauthorized: false } } : {}),
-        },
+        // extra: {
+        //   ...(process.env.NODE_ENV !== "local" ? { ssl: { rejectUnauthorized: false } } : {}),
+        // },
       }),
       TypeOrmModule.forFeature([
         PersonRepository,
@@ -81,5 +81,5 @@ export const setupAppTestModule = async () => {
     controllers: [AppController, PersonController, HotspotController, TraceController],
   }).compile();
 
-  return module.createNestMicroservice({}).init();
+  return moduleRef;
 };
