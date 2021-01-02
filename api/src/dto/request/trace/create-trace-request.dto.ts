@@ -6,11 +6,6 @@ export class CreateTraceRequestDto {
   @ApiProperty()
   @IsString()
   @IsOptional()
-  public readonly id: string;
-
-  @ApiProperty()
-  @IsString()
-  @IsOptional()
   public readonly personId: string;
 
   @ApiProperty()

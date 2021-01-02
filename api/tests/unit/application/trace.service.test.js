@@ -1,4 +1,4 @@
-const service = require('../../src/application/trace.service')
+const service = require('../../../src/application/trace.service')
 
 test('function createTrace trace service', () => {
     service.TraceService.prototype.createTrace('1').then((object) => {

@@ -1,5 +1,5 @@
-const service = require('../../src/application/hotspot.service')
-const {Hotspot} = require("../../src/infrastructure/entity/hotspot");
+const service = require('../../../src/application/hotspot.service')
+const {Hotspot} = require("../../../src/infrastructure/entity/hotspot");
 
 test('method findAll returns empty object', () => {
     service.HotspotService.prototype.findAll().then((response)=> {
