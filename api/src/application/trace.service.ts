@@ -6,7 +6,7 @@ import { TraceEntity } from "../infrastructure/entity/trace.entity";
 
 @Injectable()
 export class TraceService {
-  public constructor(private readonly traceRepository: TraceRepository) { }
+  public constructor(private readonly traceRepository: TraceRepository) {}
   private logger: Logger = new Logger(TraceService.name);
 
   public async createTrace(payload: {
@@ -55,7 +55,7 @@ export class TraceService {
   }
 
   public async getAllTraces(): Promise<TraceEntity[]> {
-    return this.traceRepository.find()
+    return await this.traceRepository.find();
   }
 
   public async removeTrace(id: string): Promise<void> {

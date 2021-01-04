@@ -1,7 +1,7 @@
-import { Command, Positional } from 'nestjs-command';
-import { Injectable, Logger } from '@nestjs/common';
-import { TraceService } from '../application/trace.service';
-import { Trace } from '../domain/trace/trace';
+import { Command, Positional } from "nestjs-command";
+import { Injectable, Logger } from "@nestjs/common";
+import { TraceService } from "../application/trace.service";
+import { Trace } from "../domain/trace/trace";
 import { v4 as uuid } from "uuid";
 import { TraceRepository } from '../infrastructure/repository/trace.repository';
 import { PersonService } from '../application/person.service';
@@ -11,39 +11,37 @@ import { HotspotController } from 'src/controller/hotspot.controller';
 // import { unirand } from 'unirand';
 const unirand = require('unirand');
 
-
 @Injectable()
 export class GenerateTracesCommand {
   public constructor(
-    private readonly traceService: TraceService, 
+    private readonly traceService: TraceService,
     private readonly traceRepository: TraceRepository,
     private readonly personService: PersonService,
     private readonly hotspotService: HotspotService
-    ) { }
+  ) {}
 
   @Command({
-    command: 'generateTraces',
-    describe: 'generates traces',
-    autoExit: true // defaults to `true`, but you can use `false` if you need more control
+    command: "generateTraces",
+    describe: "generates traces",
+    autoExit: true, // defaults to `true`, but you can use `false` if you need more control
   })
   async exec(
     @Positional({
-      name: 'amount',
-      alias: 'a',
-      describe: 'number of traces to generate',
-      type: 'number',
+      name: "amount",
+      alias: "a",
+      describe: "number of traces to generate",
+      type: "number",
     })
-    amount: number,
+    amount: number
   ): Promise<void> {
-
     let persons = await this.personService.findAllPeople();
     let hotspots = await this.hotspotService.findAll();
 
-    let personIDs = persons.map(person=>person.id);
-    let hotspotIDs = hotspots.map(hotspot=>hotspot.id);
+    let personIDs = persons.map((person) => person.id);
+    let hotspotIDs = hotspots.map((hotspot) => hotspot.id);
 
     const bulkSize = 1000;
-    let bulk: TraceEntity[] = []
+    let bulk: TraceEntity[] = [];
 
     await this.traceRepository.query(`TRUNCATE TABLE traces;`);
     let randomIds = [];

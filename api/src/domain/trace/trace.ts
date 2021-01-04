@@ -5,7 +5,7 @@ export class Trace {
     public hotspotId: string,
     public entryTime: Date,
     public exitTime: Date
-  ) { }
+  ) {}
 
   public setPersonId(personId: string) {
     this.personId = personId;
