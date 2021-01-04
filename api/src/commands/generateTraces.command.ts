@@ -8,6 +8,7 @@ import { PersonService } from '../application/person.service';
 import { HotspotService } from '../application/hotspot.service';
 import { TraceEntity } from '../infrastructure/entity/trace.entity';
 import { HotspotController } from 'src/controller/hotspot.controller';
+import { performance } from "perf_hooks";
 // import { unirand } from 'unirand';
 const unirand = require('unirand');
 
@@ -34,6 +35,7 @@ export class GenerateTracesCommand {
     })
     amount: number
   ): Promise<void> {
+    const startTime = performance.now();
     let persons = await this.personService.findAllPeople();
     let hotspots = await this.hotspotService.findAll();
 
@@ -43,7 +45,7 @@ export class GenerateTracesCommand {
     const bulkSize = 1000;
     let bulk: TraceEntity[] = [];
 
-    await this.traceRepository.query(`TRUNCATE TABLE traces;`);
+    // await this.traceRepository.query(`TRUNCATE TABLE traces;`);
     let randomIds = [];
     var desiredMin = 0; 
     var desiredMax = hotspotIDs.length-1; 
@@ -98,5 +100,9 @@ export class GenerateTracesCommand {
     }
     await this.traceRepository.save(bulk);
     console.log("Saved final TraceEntity");
+
+    const endTime = performance.now();
+    const executionTime = endTime - startTime;
+    Logger.log(`Execution time: ${executionTime}ms`);
   }
 }

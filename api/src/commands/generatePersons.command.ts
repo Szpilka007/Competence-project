@@ -3,6 +3,7 @@ import { Person } from "../domain/person/person";
 import { PersonService } from "../application/person.service";
 import faker from "faker";
 import { Command, Positional } from "nestjs-command";
+import { performance } from "perf_hooks";
 
 @Injectable()
 export class GeneratePersonsCommand {
@@ -29,8 +30,10 @@ export class GeneratePersonsCommand {
     })
     fake: boolean
   ): Promise<void> {
+    const startTime = performance.now();
+    const logMark = Math.floor(amount / 100);
     for (let i = 0; i < amount; i += 1) {
-      Logger.log("Creating person #" + i);
+      if (i % logMark == 0) Logger.log("Creating person #" + i);
       await this.personService
         .createPerson(
           new Person(
@@ -44,5 +47,8 @@ export class GeneratePersonsCommand {
         )
         .then(() => {});
     }
+    const endTime = performance.now();
+    const executionTime = endTime - startTime;
+    Logger.log(`Execution time: ${executionTime}ms`);
   }
 }

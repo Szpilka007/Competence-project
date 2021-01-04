@@ -3,6 +3,7 @@ import { Injectable, Logger } from "@nestjs/common";
 import { Hotspot } from "../infrastructure/entity/hotspot";
 import { HotspotService } from "../application/hotspot.service";
 import prob from "prob.js";
+import { performance } from "perf_hooks";
 
 const EARTH_RADIUS: number = 6357.0;
 const CENTER_LATITUDE: number = (51.747192 * Math.PI) / 180.0;
@@ -40,6 +41,7 @@ export class GenerateHotspotsCommand {
     })
     amount: number
   ): Promise<void> {
+    const startTime = performance.now();
     const exponential = prob.exponential(1.0);
 
     const bulkSize = 10000;
@@ -66,6 +68,10 @@ export class GenerateHotspotsCommand {
       if (i % Math.floor(amount / 100) == 0) Logger.log("Generated hotspot #" + i);
     }
     await this.hotspotService.bulkSave(bulk);
+
+    const endTime = performance.now();
+    const executionTime = endTime - startTime;
+    Logger.log(`Execution time: ${executionTime}ms`);
   }
 
   phi(distance: number, angle: number): number {
