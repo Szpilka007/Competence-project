@@ -45,12 +45,24 @@ export class GenerateTracesCommand {
 
     await this.traceRepository.query(`TRUNCATE TABLE traces;`);
     let randomIds = [];
+    var desiredMin = 0; 
+    var desiredMax = hotspotIDs.length-1; 
+    var scale = 1; 
+    var shape = 4; 
+    var weibullMin = Math.pow((shape*scale), (-1*shape)) * Math.pow(.000001, shape -1) * Math.exp(Math.pow((.000001/scale), shape));
+    var weibullMax = Math.pow((shape*scale), (-1*shape)) * Math.pow(.999999, shape -1) * Math.exp(Math.pow((.999999/scale), shape));
+
     for(let i = 0; i < bulkSize; i++){
-        randomIds.push(await unirand.weibull(1, 1.5).random());
+        var r = Math.random();
+        var weibullRandom = Math.pow((shape*scale), (-1*shape)) * Math.pow(r, shape-1) * Math.exp(Math.pow((r/scale), shape));
+        var weibullRandomAdjusted = desiredMin + (desiredMax - desiredMin)*((weibullRandom-weibullMin) / (weibullMax - weibullMin)); 
+        
+        // randomIds.push(await unirand.weibull(1, 1.5).random());
+        randomIds.push(Math.round(weibullRandomAdjusted));
     }
-    let maxRandom = Math.max(...randomIds);
-    let ratio = maxRandom/(hotspotIDs.length-1);
-    randomIds = randomIds.map(v=>Math.round(v/ratio));
+    // let maxRandom = Math.max(...randomIds);
+    // let ratio = maxRandom/(hotspotIDs.length-1);
+    // randomIds = randomIds.map(v=>Math.round(v/ratio));
     // let lookupId = [...Array(hotspotIDs.length).keys()];
     // unirand.shuffle(lookupId);
 
@@ -72,11 +84,16 @@ export class GenerateTracesCommand {
         bulk = []
         console.log("Saved " + i + " TraceEntity");
         for(let i = 0; i < bulkSize; i++){
-            randomIds.push(await unirand.weibull(1, 1.5).random());
+          var r = Math.random();
+          var weibullRandom = Math.pow((shape*scale), (-1*shape)) * Math.pow(r, shape-1) * Math.exp(Math.pow((r/scale), shape)); 
+          var weibullRandomAdjusted = desiredMin + (desiredMax - desiredMin)*((weibullRandom-weibullMin) / (weibullMax - weibullMin));
+          
+          // randomIds.push(await unirand.weibull(1, 1.5).random());
+          randomIds.push(Math.round(weibullRandomAdjusted));
         }
-        let maxRandom = Math.max(...randomIds);
-        let ratio = maxRandom/(hotspotIDs.length-1);
-        randomIds = randomIds.map(v=>Math.round(v/ratio));
+        // let maxRandom = Math.max(...randomIds);
+        // let ratio = maxRandom/(hotspotIDs.length-1);
+        // randomIds = randomIds.map(v=>Math.round(v/ratio));
       }
     }
     await this.traceRepository.save(bulk);
