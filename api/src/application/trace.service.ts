@@ -67,4 +67,9 @@ export class TraceService {
 
     await this.traceRepository.delete(id);
   }
+
+  public async getTraceForPerson(personId: string): Promise<{personId: string, traces: TraceEntity[]}> {
+    const traces = await this.traceRepository.find({personId})
+    return {personId, traces};
+  }
 }

@@ -32,6 +32,10 @@ import { RankHotspotsByTime } from "./commands/rankHotspotsByTime.command";
 import { HotspotTimeStatsEntity } from "./infrastructure/entity/hotspot.time.stats.entity";
 import { HotspotTimeStatRepository } from "./infrastructure/repository/hotspot.time.stat.repository";
 import { HotspotTimeStatService } from "./application/hotspot.time.stat.service";
+import {LongestRouteRepository} from "./infrastructure/repository/longestRoute.repository";
+import {LongestRouteEntity} from "./infrastructure/entity/longestRoute.entity";
+import {LongestRouteService} from "./application/longestRoute.service";
+import {LongestRouteCommand} from "./domain/longestRoute/longestRoute.commnad";
 
 dotenv.config();
 
@@ -48,6 +52,7 @@ dotenv.config();
         HotspotTimeStatsEntity,
         PhoneLookUpEntity,
         HotstpotVisitStatsEntity,
+        LongestRouteEntity
       ],
       extra: {
         ...(process.env.NODE_ENV !== "local" ? { ssl: { rejectUnauthorized: false } } : {}),
@@ -61,6 +66,7 @@ dotenv.config();
       HotspotTimeStatRepository,
       PhoneLookUpRepository,
       HotstpotVisitStatsEntity,
+      LongestRouteRepository
     ]),
     CommandModule,
   ],
@@ -79,6 +85,8 @@ dotenv.config();
     RankHotspotsByTime,
     IdentifyMostPopulatStayPointsCommand,
     HotspotStatsService,
+    LongestRouteService,
+    LongestRouteCommand
   ],
   controllers: [AppController, PersonController, HotspotController, TraceController],
 })
